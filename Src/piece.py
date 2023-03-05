@@ -17,7 +17,7 @@ class Piece:
         root = 'assets'
         # to find the image of the piece
         self.texture = os.path.join(
-            f'Chess_AI\{root}\images\imgs-{size}px\{self.color}_{self.name}.png')
+            f'assets\images\imgs-{size}px\{self.color}_{self.name}.png')
 
         # f.. meaninf folderssssss
         # assets/images/imgs-??px is the folder address

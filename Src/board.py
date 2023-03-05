@@ -18,6 +18,33 @@ class Board:
         # This should calcaluate all possible or valid moves of a specific piece in
         # a specific position
 
+        def king_moves():
+            adjs = [
+                (row-1, col),  # up
+                (row-1, col+1),  # up-right
+                (row-1, col-1),  # up-left
+                (row, col-1),  # left
+                (row, col+1),  # right
+                (row+1, col),  # ...
+                (row+1, col-1),
+                (row+1, col+1)
+            ]
+
+            # normal moves
+            for poss_move in adjs:
+                poss_move_row, poss_move_col = poss_move
+
+                if Square.in_range(poss_move_row, poss_move_col):
+                    if self.squares[poss_move_row][poss_move_col].isempty_or_rival(piece.color):
+                        # create squares opf new moves
+                        initial = Square(row, col)
+                        final = Square(poss_move_row, poss_move_col)
+
+                        move = Move(initial, final)
+                        piece.add_move(move)
+
+            # casteling moves
+
         def pawn_moves():
             # step size for pawn
             steps = 1 if piece.moved else 2
@@ -79,23 +106,78 @@ class Board:
                         # append move
                         piece.add_move(move)
 
+        def straight_line_moves(incrs):
+            for inc in incrs:
+                row_inc, col_inc = (inc)
+                poss_move_row = row + row_inc
+                poss_move_col = col + col_inc
+
+                while True:
+                    if Square.in_range(poss_move_row, poss_move_col):
+                        # checks if there are avaliavble boards
+                        # create squares of new moves
+                        initial = Square(row, col)
+                        final = Square(poss_move_row, poss_move_col)
+
+                        move = Move(initial, final)
+
+                        # check if the next square is empty
+                        if self.squares[poss_move_row][poss_move_col].isempty():
+                            # append new move
+                            piece.add_move(move)
+
+                        elif self.squares[poss_move_row][poss_move_col].has_rival_piece(piece.color):
+                            # create a new move
+                            piece.add_move(move)
+                            break
+
+                        elif self.squares[poss_move_row][poss_move_col].has_team_piece(piece.color):
+                            break
+
+                    else:
+                        break
+
+                    # incrementing the increments
+                    poss_move_row = poss_move_row + row_inc
+                    poss_move_col = poss_move_col + col_inc
+
         if isinstance(piece, Pawn):
             pawn_moves()
 
-        if isinstance(piece, Knight):
+        elif isinstance(piece, Knight):
             knight_moves()
 
-        if isinstance(piece, Bishop):
-            pass
+        elif isinstance(piece, Bishop):
+            straight_line_moves([
+                (-1, 1),  # up-right diagonal
+                (-1, -1),  # up left diognal
+                (1, 1),  # down right coner
+                (1, -1)  # down left corner
+            ])
 
-        if isinstance(piece, Rook):
-            pass
+        elif isinstance(piece, Rook):
+            straight_line_moves([
+                (-1, 0),  # up
+                (0, 1),  # left
+                (1, 0),  # down
+                (0, -1)  # right
+            ])
 
-        if isinstance(piece, Queen):
-            pass
+        elif isinstance(piece, Queen):
+            straight_line_moves([
+                (-1, 1),  # up-right diagonal
+                (-1, -1),  # up left diognal
+                (1, 1),  # down right coner
+                (1, -1),  # down left corner
 
-        if isinstance(piece, King):
-            pass
+                (-1, 0),  # up
+                (0, 1),  # left
+                (1, 0),  # down
+                (0, -1)  # right
+            ])
+
+        elif isinstance(piece, King):
+            king_moves()
 
     def _create(self):
         # look at it like table row and table data
@@ -120,6 +202,8 @@ class Board:
         # Biahops
         self.squares[row_other][2] = Square(row_other, 2, Bishop(color))
         self.squares[row_other][5] = Square(row_other, 5, Bishop(color))
+
+        # for testing self.squares[5][7] = Square(7, 5, Bishop(color))
 
         # rook
         self.squares[row_other][0] = Square(row_other, 0, Rook(color))
