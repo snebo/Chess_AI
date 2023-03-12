@@ -2,7 +2,10 @@ import pygame
 import sys
 
 from const import *
-from game import *
+from game import Game
+from square import Square
+from move import Move
+from board import *
 
 # means from the const file, import all (*=all)
 
@@ -68,6 +71,26 @@ class Main:
 
                 # for realeaase
                 elif event.type == pygame.MOUSEBUTTONUP:
+
+                    if dragger.dragging:
+                        dragger.update_mouse(event.pos)
+
+                        release_row = dragger.mouseY // SQSIZE
+                        release_col = dragger.mouseX // SQSIZE
+
+                        # check if valid
+                        initial = Square(dragger.initialRow,
+                                         dragger.initialCol)
+                        final = Square(release_row, release_col)
+                        move = Move(initial, final)
+
+                        if board.validMove(dragger.piece, move):
+                            board.move(dragger.piece, move)
+
+                            # show methods
+                            game.show_bg(screen)
+                            game.show_pieces(screen)
+
                     dragger.undrag_piece(piece)
 
                 # quit

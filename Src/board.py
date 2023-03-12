@@ -8,10 +8,29 @@ class Board:
     def __init__(self) -> None:
         # for every coloum, we add a list of 8 zeros
         self.squares = [[0, 0, 0, 0, 0, 0, 0, 0] for col in range(COLS)]
-
+        self.lastMove = None
         self._create()
         self._add_pieces('white')
         self._add_pieces('black')
+
+    # check 'move' or 'moves'
+    def move(self, piece, move):
+        initial = move.initial
+        final = move.final
+
+        # console board move update
+        self.squares[initial.row][initial.col].piece = None
+        self.squares[final.row][final.col].piece = piece
+
+        piece.moved = True
+
+        # clear valid moves
+        piece.clear_move()
+        # set last ove
+        self.lastMove = move
+
+    def validMove(self, piece, move):
+        return move in piece.moves
 
     def cal_moves(self, piece, row, col):
 

@@ -14,18 +14,20 @@ class Piece:
         self.texture_rect = texture_rect
 
     def set_texture(self, size=80):
-        root = 'assets'
         # to find the image of the piece
         self.texture = os.path.join(
             f'assets\images\imgs-{size}px\{self.color}_{self.name}.png')
 
         # f.. meaninf folderssssss
         # assets/images/imgs-??px is the folder address
-        # *color*_*imageName*.png is the image or file we're importing
+        # *color*_*imageName*.png is te image or file we're importing
         # {}in the string allows us to choose the exact file we want
 
     def add_move(self, move):
         self.moves.append(move)
+
+    def clear_move(self):
+        self.moves = []
 
 
 class Pawn(Piece):
