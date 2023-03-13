@@ -47,17 +47,22 @@ class Main:
 
                     clicked_row = dragger.mouseY//SQSIZE
                     clicked_col = dragger.mouseX//SQSIZE
+
+                    # if the current clicked square has piece
                     if board.squares[clicked_row][clicked_col].has_piece():
                         piece = board.squares[clicked_row][clicked_col].piece
 
-                        board.cal_moves(piece, clicked_row, clicked_col)
-                        dragger.save_initial(event.pos)
-                        dragger.drag_piece(piece)
+                        # check if it is a valid piece color
+                        if piece.color == game.next_player:
 
-                        # show mwthods
-                        game.show_bg(screen)
-                        game.shop_moves(screen)
-                        game.show_pieces(screen)
+                            board.cal_moves(piece, clicked_row, clicked_col)
+                            dragger.save_initial(event.pos)
+                            dragger.drag_piece(piece)
+
+                            # show mwthods
+                            game.show_bg(screen)
+                            game.shop_moves(screen)
+                            game.show_pieces(screen)
                 # for drag
                 elif event.type == pygame.MOUSEMOTION:
                     if dragger.dragging:
@@ -90,6 +95,9 @@ class Main:
                             # show methods
                             game.show_bg(screen)
                             game.show_pieces(screen)
+
+                            # next turn
+                            game.next_Turn()
 
                     dragger.undrag_piece(piece)
 

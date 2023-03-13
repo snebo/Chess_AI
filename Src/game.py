@@ -12,6 +12,7 @@ class Game:
     def __init__(self) -> None:
         self.board = Board()
         self.dragger = Dragger()
+        self.next_player = 'white'
 
         # show methods
 
@@ -63,3 +64,8 @@ class Game:
                         moves.final.row * SQSIZE, SQSIZE, SQSIZE)
                 # blit
                 pygame.draw.rect(surface, color, rect)
+
+    # Other meethods
+    def next_Turn(self):
+        # change it to white if black, else change it to black
+        self.next_player = 'white' if self.next_player == 'black' else 'black'
