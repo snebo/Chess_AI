@@ -34,6 +34,8 @@ class Main:
             game.shop_moves(screen)
             game.show_pieces(screen)
 
+            # check if is dragging
+
             if dragger.dragging:
                 dragger.update_blit(screen)
 
